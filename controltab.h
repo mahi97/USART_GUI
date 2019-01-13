@@ -46,11 +46,12 @@ private:
         QFrame *f = new QFrame(); f->setFrameShape(QFrame::HLine); f->setFrameShadow(QFrame::Sunken);
         return f;
     }
+    char output[VALVE_COUNT + TIME_COUNT + 1];
 
     void toggleBtn(QPushButton* btn);
     void changeValueSpin(QSpinBox *spin, int value);
     void changeValueScroll(QScrollBar *bar, int value);
-    char* encode(bool* _valves, int* _times);
+    void encode(bool* _valves, int* _times);
 private slots:
     void defaultValue(bool b);
     void sendData(bool b);

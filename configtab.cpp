@@ -40,13 +40,13 @@ ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent) {
 
 }
 
-void ConfigTab::updatePort(int i) {
+void ConfigTab::updatePort(int) {
     serialPort->setPortName(combo->currentData().toString());
     qInfo() << "Port Updated To: " << serialPort->portName();
 
 }
 
-void ConfigTab::updateBaud(int i) {
+void ConfigTab::updateBaud(int) {
     serialPort->setBaudRate(comboBaud->currentData().toInt());
     qInfo() << "Baud Updated To: " << serialPort->baudRate();
 }

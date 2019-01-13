@@ -98,16 +98,13 @@ void ControlTab::changeValueScroll(QScrollBar *bar, int value) {
     bar->setValue(value);
 }
 
-char* ControlTab::encode(bool *_valves, int *_times) {
-    char output[VALVE_COUNT + TIME_COUNT + 1];
+void ControlTab::encode(bool *_valves, int *_times) {
     output[0] = 0x99;
     for (int i = 0; i < TIME_COUNT; i++) output[i + 1] = static_cast<unsigned char>(_times[i] >> 2);
     for (int i = 0; i < VALVE_COUNT; i++) output[i + TIME_COUNT + 1] = static_cast<unsigned char>(_valves[i]);
-
-    return output;
 }
 
-void ControlTab::defaultValue(bool b) {
+void ControlTab::defaultValue(bool) {
     if (valvesValues[0]) {
         toggleInput(false);
     }
@@ -125,22 +122,23 @@ void ControlTab::defaultValue(bool b) {
 
 }
 
-void ControlTab::sendData(bool b) {
-    emit write(encode(valvesValues, timeValues));
+void ControlTab::sendData(bool) {
+    encode(valvesValues, timeValues);
+    emit write(output);
 }
 
-void ControlTab::toggleInput(bool b) {
+void ControlTab::toggleInput(bool) {
     toggleBtn(valves[0]);
     valvesValues[0] = !valvesValues[0];
 }
 
-void ControlTab::toggleOutput(bool b) {
+void ControlTab::toggleOutput(bool) {
     toggleBtn(valves[1]);
     valvesValues[1] = !valvesValues[1];
 
 }
 
-void ControlTab::toggleDiaphrag(bool b) {
+void ControlTab::toggleDiaphrag(bool) {
     toggleBtn(valves[2]);
     valvesValues[2] = !valvesValues[2];
 
