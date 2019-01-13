@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    usart.cpp
+    usart.cpp \
+    controltab.cpp \
+    infotab.cpp
 
 HEADERS  += mainwindow.h \
-    usart.h
+    usart.h \
+    controltab.h \
+    infotab.h
 
 FORMS    +=
