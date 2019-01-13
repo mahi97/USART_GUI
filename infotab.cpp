@@ -1,6 +1,6 @@
-#include "configtab.h"
+#include "infotab.h"
 
-ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent){
+InfoTab::InfoTab(QWidget *parent) : QWidget(parent){
     QVBoxLayout *main = new QVBoxLayout;
     QVBoxLayout *layout = new QVBoxLayout;
 

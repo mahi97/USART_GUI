@@ -5,7 +5,7 @@
 
 
 #include "controltab.h"
-#include "configtab.h"
+#include "infotab.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,7 +18,7 @@ public:
 private:
 
     ControlTab* control;
-    ConfigTab* config;
+    InfoTab* config;
 
     QTabWidget* tabs;
 

@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setCentralWidget(tabs);
 
     control = new ControlTab(tabs);
-    config  = new ConfigTab(tabs);
+    config  = new InfoTab(tabs);
 
     tabs->addTab(control, "Control");
     tabs->addTab(config, "Config");

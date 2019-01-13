@@ -14,12 +14,12 @@
 #include <QScrollArea>
 
 
-class ConfigTab : public QWidget
+class InfoTab : public QWidget
 {
     Q_OBJECT
 
 public:
-    ConfigTab(QWidget* parent);
+    InfoTab(QWidget* parent);
 };
 
 #endif // CONFIGTAB_H
