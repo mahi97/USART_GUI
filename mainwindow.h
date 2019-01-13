@@ -6,6 +6,8 @@
 
 #include "controltab.h"
 #include "infotab.h"
+#include "configtab.h"
+#include "usart.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,9 +20,12 @@ public:
 private:
 
     ControlTab* control;
-    InfoTab* config;
+    InfoTab* info;
+    ConfigTab* config;
 
     QTabWidget* tabs;
+
+    USART* usart;
 
 };
 

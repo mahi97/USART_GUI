@@ -1,5 +1,5 @@
-#ifndef INFOTAB_H
-#define INFOTAB_H
+#ifndef CONFIGTAB_H
+#define CONFIGTAB_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -12,14 +12,20 @@
 #include <QTabWidget>
 #include <QSerialPortInfo>
 #include <QScrollArea>
+#include <QComboBox>
+#include <QSerialPort>
 
-
-class InfoTab : public QWidget
+class ConfigTab : public QWidget
 {
     Q_OBJECT
-
 public:
-    InfoTab(QWidget* parent);
+    explicit ConfigTab(QWidget *parent = 0);
+
+    QSerialPort* serialPort;
+
+signals:
+
+public slots:
 };
 
-#endif // INFOTAB_H
+#endif // CONFIGTAB_H

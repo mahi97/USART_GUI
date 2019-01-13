@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     usart.cpp \
     controltab.cpp \
-    infotab.cpp
+    infotab.cpp \
+    configtab.cpp
 
 HEADERS  += mainwindow.h \
     usart.h \
     controltab.h \
-    infotab.h
+    infotab.h \
+    configtab.h
 
 FORMS    +=
