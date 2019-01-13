@@ -14,6 +14,7 @@
 #include <QScrollArea>
 #include <QComboBox>
 #include <QSerialPort>
+#include <QDebug>
 
 class ConfigTab : public QWidget
 {
@@ -22,10 +23,12 @@ public:
     explicit ConfigTab(QWidget *parent = 0);
 
     QSerialPort* serialPort;
-
-signals:
-
-public slots:
+private:
+    QComboBox* comboBaud;
+    QComboBox* combo;
+private slots:
+    void updatePort(int i);
+    void updateBaud(int i);
 };
 
 #endif // CONFIGTAB_H

@@ -5,7 +5,7 @@ ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent) {
 
     QHBoxLayout* portLay = new QHBoxLayout;
     QLabel* port = new QLabel("Port: ");
-    QComboBox* combo = new QComboBox(this);
+    combo = new QComboBox(this);
     const auto infos = QSerialPortInfo::availablePorts();
     for (const auto& info : infos) {
       combo->addItem(info.portName(), QVariant(info.systemLocation()));
@@ -15,7 +15,7 @@ ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent) {
 
     QHBoxLayout* baudLay = new QHBoxLayout;
     QLabel* baud = new QLabel("Baud Rate: ");
-    QComboBox* comboBaud = new QComboBox(this);
+    comboBaud = new QComboBox(this);
     comboBaud->addItem(QString("1200")  , QVariant(1200));
     comboBaud->addItem(QString("2400")  , QVariant(2400));
     comboBaud->addItem(QString("4800")  , QVariant(4800));
@@ -35,5 +35,18 @@ ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent) {
     serialPort->setBaudRate(comboBaud->currentData().toInt());
     serialPort->setPortName(combo->currentData().toString());
 
+    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePort(int)));
+    connect(comboBaud, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBaud(int)));
 
+}
+
+void ConfigTab::updatePort(int i) {
+    serialPort->setPortName(combo->currentData().toString());
+    qInfo() << "Port Updated To: " << serialPort->portName();
+
+}
+
+void ConfigTab::updateBaud(int i) {
+    serialPort->setBaudRate(comboBaud->currentData().toInt());
+    qInfo() << "Baud Updated To: " << serialPort->baudRate();
 }

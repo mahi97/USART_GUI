@@ -23,11 +23,19 @@ public:
     static const int TIME_COUNT = 4;
 
 private:
+
     QPushButton* valves[VALVE_COUNT];
     QLabel* valveLabels[VALVE_COUNT];
 
+    bool valvesValues[VALVE_COUNT];
+
     QSpinBox* timeSpins[TIME_COUNT];
     QScrollBar* scrollBars[TIME_COUNT];
+
+    int timeValues[TIME_COUNT];
+
+    QPushButton* def ;
+    QPushButton* send;
 
     QFrame* getVLine() {
         QFrame *f = new QFrame(); f->setFrameShape(QFrame::VLine); f->setFrameShadow(QFrame::Sunken);
@@ -42,10 +50,14 @@ private:
     void toggleBtn(QPushButton* btn);
     void changeValueSpin(QSpinBox *spin, int value);
     void changeValueScroll(QScrollBar *bar, int value);
+    char* encode(bool* _valves, int* _times);
 private slots:
+    void defaultValue(bool b);
+    void sendData(bool b);
+
     void toggleInput(bool b);
     void toggleOutput(bool b);
-    void toggleDiafrag(bool b);
+    void toggleDiaphrag(bool b);
 
     void changeValueT0(int i);
     void changeValueT1(int i);
@@ -56,7 +68,8 @@ private slots:
     void changeValueS1(int i);
     void changeValueS2(int i);
     void changeValueS3(int i);
-
+signals:
+    void write(char*);
 };
 
 #endif // CONTROLTAB_H
