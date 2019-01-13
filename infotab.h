@@ -20,6 +20,10 @@ class InfoTab : public QWidget
 
 public:
     InfoTab(QWidget* parent);
+private:
+    QLabel *label;
+private slots:
+    void updateInfo(bool b = false);
 };
 
 #endif // INFOTAB_H

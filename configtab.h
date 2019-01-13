@@ -24,11 +24,17 @@ public:
 
     QSerialPort* serialPort;
 private:
+    QComboBox* comboParity;
+    QComboBox* comboStop;
+    QComboBox* comboDataBits;
     QComboBox* comboBaud;
-    QComboBox* combo;
+    QComboBox* comboPort;
 private slots:
     void updatePort(int i);
     void updateBaud(int i);
+    void updateStop(int i);
+    void updatePari(int i);
+    void updateData(int i);
 };
 
 #endif // CONFIGTAB_H
