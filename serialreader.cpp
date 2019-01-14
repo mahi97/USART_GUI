@@ -13,7 +13,7 @@ SerialReader::~SerialReader() {
 
 void SerialReader::handleReadyRead() {
     m_data.append(m_serialPort->readAll());
-
+    // You should decode data here.
     if (!m_timer.isActive())
         m_timer.start(5000);
 }

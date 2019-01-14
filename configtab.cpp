@@ -128,8 +128,6 @@ void ConfigTab::checkPort(bool) {
 void ConfigTab::updatePort(int) {
     connectSerial();
     qInfo() << "Port Updated To: " << serialPort->portName();
-
-
 }
 
 void ConfigTab::updateBaud(int) {
