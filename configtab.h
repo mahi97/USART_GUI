@@ -21,20 +21,32 @@ class ConfigTab : public QWidget
     Q_OBJECT
 public:
     explicit ConfigTab(QWidget *parent = 0);
-
+    ~ConfigTab();
     QSerialPort* serialPort;
 private:
+    void connectSerial();
+    void closeSerial();
+    bool serial_open;
+
     QComboBox* comboParity;
     QComboBox* comboStop;
     QComboBox* comboDataBits;
     QComboBox* comboBaud;
     QComboBox* comboPort;
+
+    QPushButton* check;
+
 private slots:
+    void checkPort(bool);
     void updatePort(int i);
     void updateBaud(int i);
     void updateStop(int i);
     void updatePari(int i);
     void updateData(int i);
+
+signals:
+    void connected();
+    void disconnected();
 };
 
 #endif // CONFIGTAB_H

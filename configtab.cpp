@@ -60,12 +60,36 @@ ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent) {
     dataLay->addWidget(data);
     dataLay->addWidget(comboDataBits);
 
+    check = new QPushButton("Check");
+
+
     layout->addLayout(portLay);
     layout->addLayout(baudLay);
     layout->addLayout(stopLay);
     layout->addLayout(parityLay);
     layout->addLayout(dataLay);
+    layout->addWidget(check);
     setLayout(layout);
+
+    connect(check, SIGNAL(clicked(bool)), this, SLOT(checkPort(bool)));
+
+    connect(comboPort, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePort(int)));
+    connect(comboBaud, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBaud(int)));
+    connect(comboParity, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePari(int)));
+    connect(comboStop, SIGNAL(currentIndexChanged(int)), this, SLOT(updateStop(int)));
+    connect(comboDataBits, SIGNAL(currentIndexChanged(int)), this, SLOT(updateData(int)));
+
+    serial_open = false;
+    serialPort = nullptr;
+    connectSerial();
+}
+
+ConfigTab::~ConfigTab() {
+    closeSerial();
+}
+
+void ConfigTab::connectSerial() {
+    closeSerial();
 
     serialPort = new QSerialPort(this);
     serialPort->setBaudRate(comboBaud->currentData().toInt());
@@ -74,36 +98,56 @@ ConfigTab::ConfigTab(QWidget *parent) : QWidget(parent) {
     serialPort->setStopBits(QSerialPort::StopBits(comboStop->currentData().toInt()));
     serialPort->setDataBits(QSerialPort::DataBits(comboDataBits->currentData().toInt()));
 
-    connect(comboPort, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePort(int)));
-    connect(comboBaud, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBaud(int)));
-    connect(comboParity, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePari(int)));
-    connect(comboStop, SIGNAL(currentIndexChanged(int)), this, SLOT(updateStop(int)));
-    connect(comboDataBits, SIGNAL(currentIndexChanged(int)), this, SLOT(updateData(int)));
-
+    if (serialPort->open(QIODevice::ReadWrite)) {
+        serial_open = true;
+        qInfo() << "Device is Connected";
+    } else {
+        serial_open = false;
+        qWarning() << "Cannot Open Device";
+    }
+    emit connected();
 }
 
+void ConfigTab::closeSerial() {
+    emit disconnect();
+    if (serialPort == nullptr) {
+        return;
+    }
+    serialPort->close();
+    delete serialPort;
+    serialPort = nullptr;
+    serial_open = false;
+    qInfo() << "Disconnected";
+}
+
+void ConfigTab::checkPort(bool) {
+    connectSerial();
+}
+
+
 void ConfigTab::updatePort(int) {
-    serialPort->setPortName(comboPort->currentData().toString());
+    connectSerial();
     qInfo() << "Port Updated To: " << serialPort->portName();
+
 
 }
 
 void ConfigTab::updateBaud(int) {
-    serialPort->setBaudRate(comboBaud->currentData().toInt());
+    connectSerial();
     qInfo() << "Baud Updated To: " << serialPort->baudRate();
 }
 
 void ConfigTab::updateStop(int) {
-    serialPort->setStopBits(QSerialPort::StopBits(comboStop->currentData().toInt()));
+    connectSerial();
     qInfo() << "Stop Bits Updated To: " << serialPort->stopBits();
 }
 
 void ConfigTab::updatePari(int) {
-    serialPort->setParity(QSerialPort::Parity(comboParity->currentData().toInt()));
+    connectSerial();
     qInfo() << "Parity Updated To: " << serialPort->parity();
 }
 
 void ConfigTab::updateData(int) {
-    serialPort->setDataBits(QSerialPort::DataBits(comboDataBits->currentData().toInt()));
+    connectSerial();
     qInfo() << "DataBits Updated To: " << serialPort->dataBits();
 }

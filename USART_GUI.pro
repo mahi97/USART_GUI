@@ -14,15 +14,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    usart.cpp \
     controltab.cpp \
     infotab.cpp \
-    configtab.cpp
+    configtab.cpp \
+    serialwriter.cpp \
+    serialreader.cpp \
+    baseserial.cpp
 
 HEADERS  += mainwindow.h \
-    usart.h \
     controltab.h \
     infotab.h \
-    configtab.h
+    configtab.h \
+    serialwriter.h \
+    serialreader.h \
+    baseserial.h
 
 FORMS    +=

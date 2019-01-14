@@ -7,7 +7,8 @@
 #include "controltab.h"
 #include "infotab.h"
 #include "configtab.h"
-#include "usart.h"
+#include "serialwriter.h"
+#include "serialreader.h"
 
 class MainWindow : public QMainWindow
 {
@@ -19,6 +20,8 @@ public:
 
 private slots:
     void write(char* data);
+    void slt_connect();
+    void slt_disconnect();
 private:
 
     ControlTab* control;
@@ -27,7 +30,8 @@ private:
 
     QTabWidget* tabs;
 
-    USART* usart;
+    SerialWriter* writer;
+    SerialReader* reader;
 
 };
 

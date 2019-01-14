@@ -15,14 +15,29 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     setFocus();
 
-    usart = new USART(config->serialPort, this);
-
     connect(control, SIGNAL(write(char*)), this, SLOT(write(char*)));
+    connect(config, SIGNAL(connected()), this, SLOT(slt_connect()));
+    connect(config, SIGNAL(disconnected()), this, SLOT(slt_disconnect()));
 }
+
 
 MainWindow::~MainWindow() {
 }
 
 void MainWindow::write(char *data) {
-    usart->write(QByteArray(data, 8));
+    if (config->serialPort->isOpen()) {
+        writer->write(QByteArray(data, 8));
+    }
+}
+
+void MainWindow::slt_connect() {
+    writer = new SerialWriter(config->serialPort, this);
+    reader = new SerialReader(config->serialPort, this);
+}
+
+void MainWindow::slt_disconnect() {
+    delete writer;
+    delete reader;
+    writer = nullptr;
+    reader = nullptr;
 }
