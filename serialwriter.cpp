@@ -40,4 +40,5 @@ void SerialWriter::write(const QByteArray &writeData)
     }
 
     m_timer.start(5000);
+
 }

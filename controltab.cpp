@@ -3,42 +3,39 @@
 
 ControlTab::ControlTab(QWidget *parent) : QWidget(parent) {
 
-    valveLabels[0] = new QLabel("Input"  );
-    valveLabels[1] = new QLabel("Output" );
-    valveLabels[2] = new QLabel("Diafrag");
+    QVBoxLayout* all = new QVBoxLayout;
+    QHBoxLayout* main = new QHBoxLayout;
 
-    valves[0] = new QPushButton("Off");
-    valves[1] = new QPushButton("Off");
-    valves[2] = new QPushButton("Off");
+    QVBoxLayout* valvesLayouts[VALVE_COUNT];
 
-    QVBoxLayout* valvesLayouts[3];
-    for (auto& l : valvesLayouts) {
-        l = new QVBoxLayout;
-    }
     for (int i = 0; i < VALVE_COUNT; i++) {
+        valveLabels[i] = new QLabel("None");
+        valves[i] = new QPushButton("Off");
+        valves[i]->setObjectName(QString("%1").arg(i));
+        valvesLayouts[i] = new QVBoxLayout;
         valvesLayouts[i]->addWidget(valveLabels[i], 0, Qt::AlignCenter);
         valvesLayouts[i]->addWidget(valves[i], 0, Qt::AlignCenter);
         valvesValues[i] = false;
-    }
-
-    QVBoxLayout* all = new QVBoxLayout;
-    QHBoxLayout* main = new QHBoxLayout;
-    for (auto& layout : valvesLayouts) {
         main->addWidget(getVLine());
-        main->addLayout(layout);
+        main->addLayout(valvesLayouts[i]);
         main->addWidget(getVLine());
-
     }
+    valveLabels[0]->setText("Input"  );
+    valveLabels[1]->setText("Output" );
+    valveLabels[2]->setText("Diafrag");
 
     QVBoxLayout* scroll = new QVBoxLayout;
-    QLabel* t[4];
-    QHBoxLayout* hb[4];
-    for (int i = 0; i < 4; i++) {
+    QLabel* t[TIME_COUNT];
+    QHBoxLayout* hb[TIME_COUNT];
+    for (int i = 0; i < TIME_COUNT; i++) {
         t[i] = new QLabel(QString("T_%1").arg(i));
         scrollBars[i] = new QScrollBar(Qt::Horizontal);
+        scrollBars[i]->setObjectName(QString("%1").arg(i));
         scrollBars[i]->setMaximum(1000);
+
         hb[i] = new QHBoxLayout;
         timeSpins[i] = new QSpinBox();
+        timeSpins[i]->setObjectName(QString("%1").arg(i));
         timeSpins[i]->setMinimum(0);
         timeSpins[i]->setMaximum(1000);
         timeSpins[i]->setValue(scrollBars[i]->value());
@@ -54,8 +51,6 @@ ControlTab::ControlTab(QWidget *parent) : QWidget(parent) {
     btns->addWidget(def);
     btns->addWidget(send);
 
-
-
     QLabel* header = new QLabel("USART GUI V0.1", this);
     all->addWidget(header, 0, Qt::AlignCenter);
     all->addWidget(getHLine());
@@ -66,36 +61,45 @@ ControlTab::ControlTab(QWidget *parent) : QWidget(parent) {
     all->addLayout(btns);
     setLayout(all);
 
-    connect(valves[0], SIGNAL(clicked(bool)), this, SLOT(toggleInput(bool)));
-    connect(valves[1], SIGNAL(clicked(bool)), this, SLOT(toggleOutput(bool)));
-    connect(valves[2], SIGNAL(clicked(bool)), this, SLOT(toggleDiaphrag(bool)));
+    for (auto& v : valves) {
+        connect(v, SIGNAL(clicked(bool)), this, SLOT(toggleBtn(bool)));
+    }
 
-    connect(scrollBars[0], SIGNAL(valueChanged(int)), this, SLOT(changeValueT0(int)));
-    connect(scrollBars[1], SIGNAL(valueChanged(int)), this, SLOT(changeValueT1(int)));
-    connect(scrollBars[2], SIGNAL(valueChanged(int)), this, SLOT(changeValueT2(int)));
-    connect(scrollBars[3], SIGNAL(valueChanged(int)), this, SLOT(changeValueT3(int)));
+    for (auto& s : scrollBars) {
+        connect(s, SIGNAL(valueChanged(int)), this, SLOT(changeValueSpin(int)));
+    }
 
-    connect(timeSpins[0], SIGNAL(valueChanged(int)), this, SLOT(changeValueS0(int)));
-    connect(timeSpins[1], SIGNAL(valueChanged(int)), this, SLOT(changeValueS1(int)));
-    connect(timeSpins[2], SIGNAL(valueChanged(int)), this, SLOT(changeValueS2(int)));
-    connect(timeSpins[3], SIGNAL(valueChanged(int)), this, SLOT(changeValueS3(int)));
+    for (auto& s : timeSpins) {
+        connect(s, SIGNAL(valueChanged(int)), this, SLOT(changeValueScroll(int)));
+    }
 
     connect(def, SIGNAL(clicked(bool)), this, SLOT(defaultValue(bool)));
     connect(send, SIGNAL(clicked(bool)), this, SLOT(sendData(bool)));
 
 }
 
-void ControlTab::toggleBtn(QPushButton *btn) {
+void ControlTab::toggleBtn(bool) {
+    QPushButton* btn = qobject_cast<QPushButton*> (QObject::sender());
     if (btn->text() == "On") btn->setText("Off");
     else btn->setText("On");
+    int index = btn->objectName().toInt();
+    valvesValues[index] = !valvesValues[index];
+
 }
 
-void ControlTab::changeValueSpin(QSpinBox *spin, int value) {
-    spin->setValue(value);
+void ControlTab::changeValueSpin(int value) {
+    QScrollBar* scroll = qobject_cast<QScrollBar*> (QObject::sender());
+    int index = scroll->objectName().toInt();
+    timeSpins[index]->setValue(value);
+    timeValues[index] = value;
+
 }
 
-void ControlTab::changeValueScroll(QScrollBar *bar, int value) {
-    bar->setValue(value);
+void ControlTab::changeValueScroll(int value) {
+    QSpinBox* spin = qobject_cast<QSpinBox*> (QObject::sender());
+    int index = spin->objectName().toInt();
+    scrollBars[index]->setValue(value);
+    timeValues[index] = value;
 }
 
 void ControlTab::encode(bool *_valves, int *_times) {
@@ -105,14 +109,10 @@ void ControlTab::encode(bool *_valves, int *_times) {
 }
 
 void ControlTab::defaultValue(bool) {
-    if (valvesValues[0]) {
-        toggleInput(false);
-    }
-    if (valvesValues[1]) {
-        toggleOutput(false);
-    }
-    if (valvesValues[2]) {
-        toggleDiaphrag(false);
+
+    for (int i = 0; i < VALVE_COUNT; i++) {
+        valvesValues[i] = false;
+        valves[i]->setText("Off");
     }
 
     for (int i = 0; i < TIME_COUNT; i++) {
@@ -126,60 +126,3 @@ void ControlTab::sendData(bool) {
     encode(valvesValues, timeValues);
     emit write(output);
 }
-
-void ControlTab::toggleInput(bool) {
-    toggleBtn(valves[0]);
-    valvesValues[0] = !valvesValues[0];
-}
-
-void ControlTab::toggleOutput(bool) {
-    toggleBtn(valves[1]);
-    valvesValues[1] = !valvesValues[1];
-
-}
-
-void ControlTab::toggleDiaphrag(bool) {
-    toggleBtn(valves[2]);
-    valvesValues[2] = !valvesValues[2];
-
-}
-
-void ControlTab::changeValueT0(int i) {
-    changeValueSpin(timeSpins[0], i);
-    timeValues[0] = i;
-}
-
-void ControlTab::changeValueT1(int i) {
-    changeValueSpin(timeSpins[1], i);
-    timeValues[1] = i;
-
-}
-
-void ControlTab::changeValueT2(int i) {
-    changeValueSpin(timeSpins[2], i);
-    timeValues[2] = i;
-
-}
-
-void ControlTab::changeValueT3(int i) {
-    changeValueSpin(timeSpins[3], i);
-    timeValues[3] = i;
-
-}
-
-void ControlTab::changeValueS0(int i) {
-    changeValueScroll(scrollBars[0], i);
-}
-
-void ControlTab::changeValueS1(int i) {
-    changeValueScroll(scrollBars[1], i);
-}
-
-void ControlTab::changeValueS2(int i) {
-    changeValueScroll(scrollBars[2], i);
-}
-
-void ControlTab::changeValueS3(int i) {
-    changeValueScroll(scrollBars[3], i);
-}
-

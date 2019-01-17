@@ -20,7 +20,7 @@ public:
 
 private slots:
     void write(char* data);
-    void slt_connect();
+    void slt_connect(int);
     void slt_disconnect();
 private:
 
@@ -30,7 +30,7 @@ private:
 
     QTabWidget* tabs;
 
-    SerialWriter* writer;
+//    SerialWriter* writer;
     SerialReader* reader;
 
 };

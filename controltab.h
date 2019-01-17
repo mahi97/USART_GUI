@@ -48,27 +48,15 @@ private:
     }
     char output[VALVE_COUNT + TIME_COUNT + 1];
 
-    void toggleBtn(QPushButton* btn);
-    void changeValueSpin(QSpinBox *spin, int value);
-    void changeValueScroll(QScrollBar *bar, int value);
     void encode(bool* _valves, int* _times);
 private slots:
     void defaultValue(bool b);
     void sendData(bool b);
 
-    void toggleInput(bool b);
-    void toggleOutput(bool b);
-    void toggleDiaphrag(bool b);
+    void toggleBtn(bool);
+    void changeValueScroll(int value);
+    void changeValueSpin(int value);
 
-    void changeValueT0(int i);
-    void changeValueT1(int i);
-    void changeValueT2(int i);
-    void changeValueT3(int i);
-
-    void changeValueS0(int i);
-    void changeValueS1(int i);
-    void changeValueS2(int i);
-    void changeValueS3(int i);
 signals:
     void write(char*);
 };

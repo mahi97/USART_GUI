@@ -98,18 +98,18 @@ void ConfigTab::connectSerial() {
     serialPort->setStopBits(QSerialPort::StopBits(comboStop->currentData().toInt()));
     serialPort->setDataBits(QSerialPort::DataBits(comboDataBits->currentData().toInt()));
 
-    if (serialPort->open(QIODevice::ReadWrite)) {
+    if (serialPort->open(QIODevice::WriteOnly)) {
         serial_open = true;
         qInfo() << "Device is Connected";
     } else {
         serial_open = false;
         qWarning() << "Cannot Open Device";
     }
-    emit connected();
+    emit con(3);
 }
 
 void ConfigTab::closeSerial() {
-    emit disconnect();
+//    emit disconnect();
     if (serialPort == nullptr) {
         return;
     }
